@@ -183,7 +183,7 @@ def transaction_step() -> None:
     </div>""", unsafe_allow_html=True)
     st.markdown('<div class="question"><small>YOUR DECISION</small><b>거래 징후를 검토한 후 조치를 선택하세요.</b></div>', unsafe_allow_html=True)
     if not st.session_state.revealed:
-        choice_cards("transaction_choice", ("승인", "추가 인증", "차단"))
+        choice_cards("transaction_choice", ("1. 승인", "2. 추가 인증", "3. 차단"))
         reveal_button("transaction_choice")
         return
     matched = st.session_state.transaction_choice == scenario.agent_action
@@ -222,7 +222,7 @@ def model_step() -> None:
       <div class="network-search"><span></span><b>SEARCHING FOR THE RIGHT CONNECTION</b><span></span></div>
     </div>""", unsafe_allow_html=True)
     if not st.session_state.revealed:
-        choice_cards("model_choice", ("Local-only", "Federated", "Centralized"), "탐지 모델")
+        choice_cards("model_choice", ("1. Local-only", "2. Federated", "3. Centralized"), "탐지 모델")
         reveal_button("model_choice")
         return
     correct = st.session_state.model_choice == "Federated"
@@ -246,7 +246,7 @@ def attack_step() -> None:
       <div class="attack-metric"><span>업데이트 크기</span><b>× 12.4</b><small>평균 대비</small></div><div class="attack-metric"><span>사기 탐지 점수</span><b>92 → 34</b><small>급격한 하락</small></div><div class="attack-metric"><span>공동 모델 F1</span><b>0.88 → 0.49</b><small>성능 훼손</small></div>
     </div>""", unsafe_allow_html=True)
     if not st.session_state.revealed:
-        choice_cards("attack_choice", ("Label Flip", "Update Scale", "Gradient Leakage"), "공격 유형")
+        choice_cards("attack_choice", ("1. Label Flip", "2. Update Scale", "3. Gradient Leakage"), "공격 유형")
         reveal_button("attack_choice")
         return
     correct = st.session_state.attack_choice == ATTACK_EVENT["answer"]
@@ -276,7 +276,7 @@ def privacy_step() -> None:
       <div class="scale-copy"><small>DATA SHIELD</small><b>개인정보 보호</b></div>
     </div>''', unsafe_allow_html=True)
     if not st.session_state.revealed:
-        choice_cards("privacy_choice", ("Low", "Balanced", "High"), "보호 수준")
+        choice_cards("privacy_choice", ("1. Low", "2. Balanced", "3. High"), "보호 수준")
         reveal_button("privacy_choice")
         return
     choice = st.session_state.privacy_choice
