@@ -112,12 +112,12 @@ function resultScreen() {
   <div class="stButton"><button type="button" data-restart>새 조사관 맞이하기&nbsp; ↻</button></div>`;
 }
 
-function render() {
+function render({ scrollTop = false } = {}) {
   try {
     const screens = { 1: transactionScreen, 2: modelScreen, 3: attackScreen, 4: privacyScreen, 5: resultScreen };
     app.innerHTML = `<div class="screen-enter">${nav()}${state.step === 0 ? landing() : stepper() + screens[state.step]() + footer()}</div>`;
     bindEvents();
-    if (state.step > 0 && !document.querySelector(".deal-overlay")) window.scrollTo({ top: 0, behavior: "smooth" });
+    if (scrollTop) window.scrollTo({ top: 0, behavior: "smooth" });
   } catch (error) {
     console.error(error);
     app.innerHTML = `<div class="error-boundary">화면을 표시하지 못했습니다. 페이지를 새로고침해 주세요.</div>`;
@@ -125,11 +125,20 @@ function render() {
 }
 
 function bindEvents() {
-  document.querySelector("[data-enter]")?.addEventListener("click", () => { state.step = 1; state.deal = true; render(); });
-  document.querySelectorAll("[data-choice]").forEach(button => button.addEventListener("click", () => { state[button.dataset.choice] = button.dataset.value; render(); }));
+  document.querySelector("[data-enter]")?.addEventListener("click", () => { state.step = 1; state.deal = true; render({ scrollTop: true }); });
+  document.querySelectorAll("[data-choice]").forEach(button => button.addEventListener("click", () => {
+    const key = button.dataset.choice;
+    state[key] = button.dataset.value;
+    document.querySelectorAll(`[data-choice="${key}"]`).forEach(option => {
+      const selected = option.dataset.value === state[key];
+      option.setAttribute("kind", selected ? "primary" : "secondary");
+      option.textContent = `${selected ? "SELECTED  ·  " : ""}${option.dataset.value}`;
+    });
+    document.querySelector(`[data-submit="${key}"]`).disabled = false;
+  }));
   document.querySelector("[data-submit]")?.addEventListener("click", () => { state.revealed = true; render(); });
-  document.querySelector("[data-next]")?.addEventListener("click", () => { state.step += 1; state.revealed = false; render(); });
-  document.querySelector("[data-restart]")?.addEventListener("click", () => { Object.assign(state, { step: 0, scenario: Math.floor(Math.random() * scenarios.length), revealed: false, transaction: null, model: null, attack: null, privacy: null, deal: false }); render(); });
+  document.querySelector("[data-next]")?.addEventListener("click", () => { state.step += 1; state.revealed = false; render({ scrollTop: true }); });
+  document.querySelector("[data-restart]")?.addEventListener("click", () => { Object.assign(state, { step: 0, scenario: Math.floor(Math.random() * scenarios.length), revealed: false, transaction: null, model: null, attack: null, privacy: null, deal: false }); render({ scrollTop: true }); });
 }
 
 render();
