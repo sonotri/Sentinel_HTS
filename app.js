@@ -61,7 +61,7 @@ function dealOverlay() {
 
 function transactionScreen() {
   const s = scenarios[state.scenario];
-  let body = `${dealOverlay()}${head("01", "이 거래를 승인하시겠습니까?", "거래 원장의 단서를 읽고 은행이 취해야 할 조치를 결정하세요.")}${concept("이상거래탐지시스템(Fraud Detection System, FDS)", "FDS는 거래 내역, 고객 정보, 평소 거래 패턴 등을 분석해서 의심되는 이상 거래를 탐지하고 차단하는 기술입니다.")}
+  let body = `${head("01", "이 거래를 승인하시겠습니까?", "거래 원장의 단서를 읽고 은행이 취해야 할 조치를 결정하세요.")}${concept("이상거래탐지시스템(Fraud Detection System, FDS)", "FDS는 거래 내역, 고객 정보, 평소 거래 패턴 등을 분석해서 의심되는 이상 거래를 탐지하고 차단하는 기술입니다.")}
   <div class="transaction-card"><div class="ledger-ribbon"><span>TRANSACTION LEDGER</span><b>${s.id}</b></div><div class="amount-hero"><small>${s.merchant}</small><b>${s.amount}</b><span>결제 승인 요청</span></div><div class="transaction-grid"><div class="datum"><span>거래 시간</span><b>${s.time}</b></div><div class="datum"><span>접속 위치</span><b>${s.location}</b></div><div class="datum"><span>접속 IP</span><b>${s.ip}</b></div><div class="datum"><span>사용 기기</span><b>${s.device}</b></div><div class="datum wide"><span>거래 속도</span><b>${s.velocity}</b></div></div><div class="ledger-stamp">REVIEW</div></div><div class="question"><small>YOUR DECISION</small><b>거래 징후를 검토한 후 조치를 선택하세요.</b></div>`;
   if (!state.revealed) return body + choiceList("transaction", ["승인", "추가 인증", "차단"]) + submit("transaction");
   const correct = state.transaction === s.action;
@@ -115,9 +115,25 @@ function resultScreen() {
 function render({ scrollTop = false } = {}) {
   try {
     const screens = { 1: transactionScreen, 2: modelScreen, 3: attackScreen, 4: privacyScreen, 5: resultScreen };
-    app.innerHTML = `<div class="screen-enter">${nav()}${state.step === 0 ? landing() : stepper() + screens[state.step]() + footer()}</div>`;
+    const overlayMarkup = state.deal ? dealOverlay() : "";
+    app.innerHTML = `<div class="screen-enter">${nav()}${state.step === 0 ? landing() : stepper() + screens[state.step]() + footer()}</div>${overlayMarkup}`;
     bindEvents();
-    if (scrollTop) window.scrollTo({ top: 0, behavior: "smooth" });
+    if (scrollTop) window.scrollTo({ top: 0, behavior: "auto" });
+    const overlay = document.querySelector(".deal-overlay");
+    if (overlay && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.body.classList.add("deal-active");
+      const finishDeal = () => {
+        overlay.remove();
+        document.body.classList.remove("deal-active");
+      };
+      overlay.addEventListener("animationend", event => {
+        if (event.target === overlay) finishDeal();
+      });
+      window.setTimeout(finishDeal, 2800);
+    } else {
+      overlay?.remove();
+      document.body.classList.remove("deal-active");
+    }
   } catch (error) {
     console.error(error);
     app.innerHTML = `<div class="error-boundary">화면을 표시하지 못했습니다. 페이지를 새로고침해 주세요.</div>`;
@@ -125,7 +141,12 @@ function render({ scrollTop = false } = {}) {
 }
 
 function bindEvents() {
-  document.querySelector("[data-enter]")?.addEventListener("click", () => { state.step = 1; state.deal = true; render({ scrollTop: true }); });
+  document.querySelector("[data-enter]")?.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+    state.step = 1;
+    state.deal = true;
+    render();
+  });
   document.querySelectorAll("[data-choice]").forEach(button => button.addEventListener("click", () => {
     const key = button.dataset.choice;
     state[key] = button.dataset.value;

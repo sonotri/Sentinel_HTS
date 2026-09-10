@@ -1,6 +1,7 @@
 * { box-sizing: border-box; }
-html { min-height: 100%; background: #061310; }
+html { min-height: 100%; background: #061310; scrollbar-gutter: stable; }
 body { margin: 0; min-height: 100vh; }
+body.deal-active { overflow: hidden; }
 .block-container { margin: 0 auto; }
 .stButton { margin-top: 10px; }
 .stButton > button { width: 100%; cursor: pointer; }
@@ -17,6 +18,12 @@ body { margin: 0; min-height: 100vh; }
 .static-expander p { margin: 0; padding: 0 18px 17px; color: #c8c0ae; font-size: 12px; }
 .screen-enter { animation: screen-enter .42s ease both; }
 .landing-action { margin-top: 16px; }
+.deal-overlay {
+  pointer-events: auto;
+  background: radial-gradient(circle at center, rgba(22,79,64,.42), rgba(2,8,6,.58) 72%);
+  -webkit-backdrop-filter: blur(9px) brightness(.72) saturate(.85);
+  backdrop-filter: blur(9px) brightness(.72) saturate(.85);
+}
 .error-boundary { padding: 28px; border: 1px solid #9e4c54; color: #f0d9c8; background: #351519; }
 noscript { display: block; padding: 20px; color: white; background: #351519; text-align: center; }
 @keyframes screen-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
