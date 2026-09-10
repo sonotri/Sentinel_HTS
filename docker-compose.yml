@@ -1,0 +1,48 @@
+services:
+  experiment:
+    build: .
+    command: python scripts/run_experiment.py --config configs/default.yaml
+    volumes:
+      - ./outputs:/app/outputs
+
+  dashboard:
+    build: .
+    command: streamlit run dashboard/app.py --server.address 0.0.0.0 --server.port 8501 --server.headless true
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./outputs:/app/outputs
+    depends_on:
+      - experiment
+
+  redpanda:
+    image: redpandadata/redpanda:v24.2.8
+    profiles: ["streaming"]
+    command:
+      - redpanda
+      - start
+      - --overprovisioned
+      - --smp
+      - "1"
+      - --memory
+      - 512M
+      - --reserve-memory
+      - 0M
+      - --node-id
+      - "0"
+      - --check=false
+      - --kafka-addr
+      - PLAINTEXT://0.0.0.0:9092
+      - --advertise-kafka-addr
+      - PLAINTEXT://redpanda:9092
+    ports:
+      - "9092:9092"
+
+  stream-simulator:
+    build: .
+    profiles: ["streaming"]
+    command: python scripts/run_streaming_simulation.py --mode file
+    volumes:
+      - ./outputs:/app/outputs
+    depends_on:
+      - redpanda

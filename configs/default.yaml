@@ -1,0 +1,10 @@
+samples_per_bank: 3000
+rounds: 5
+local_epochs: 2
+centralized_epochs: 10
+fraud_rate: 0.055
+seed: 42
+dp_enabled: true
+noise_multiplier: 0.02
+output_dir: outputs
+save_artifacts: true
