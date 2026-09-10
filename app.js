@@ -76,7 +76,7 @@ function modelScreen() {
   <div class="bank-network"><div class="bank-row">${["A", "B", "C"].map(bank => `<div class="bank-node"><div class="bank-building"><i>${bank}</i><span></span></div><b>BANK ${bank}</b><small>원본 거래 보관</small></div>`).join("")}</div><div class="network-search"><span></span><b>SEARCHING FOR THE RIGHT CONNECTION</b><span></span></div></div>`;
   if (!state.revealed) return body + choiceList("model", ["Local-only", "Federated", "Centralized"], "탐지 모델") + submit("model");
   const correct = state.model === "Federated";
-  const scores = Object.entries(s.models).map(([model, score]) => `<div class="score-chip ${model === "Federated" ? "best" : ""}"><span>${model}</span><b>${score}%</b><small>FRAUD SCORE</small></div>`).join("");
+  const scores = Object.entries(s.models).map(([model, score]) => `<div class="score-chip risk-score ${model === "Federated" ? "best" : ""}"><span><strong>${model}</strong><em>— 사기 위험도</em></span><b>${score}%</b></div>`).join("");
   body += `<div class="result-card ${correct ? "success" : "danger"}"><div class="result-seal">${correct ? "✓" : "!"}</div><div class="eyebrow">SCENARIO RECOMMENDATION</div><h3>권장 방식 · Federated</h3><p>당신의 선택은 <b>${state.model}</b>입니다. 원본 반출 없이 세 은행의 패턴을 함께 활용하려면 Federated가 가장 적합합니다.</p><div class="score-row">${scores}</div></div>`;
   return body + expand("Federated가 왜 유리한가요?", "한 은행에서는 드문 공격이 다른 은행에서는 관측될 수 있습니다. 연합학습은 원본 거래를 중앙에 모으지 않으면서 이런 패턴을 공동으로 학습합니다.") + next();
 }

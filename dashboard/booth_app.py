@@ -226,7 +226,7 @@ def model_step() -> None:
         reveal_button("model_choice")
         return
     correct = st.session_state.model_choice == "Federated"
-    chips = "".join(f'<div class="score-chip {"best" if model == "Federated" else ""}"><span>{model}</span><b>{score}%</b><small>FRAUD SCORE</small></div>' for model, score in scenario.model_scores.items())
+    chips = "".join(f'<div class="score-chip risk-score {"best" if model == "Federated" else ""}"><span><strong>{model}</strong><em>— 사기 위험도</em></span><b>{score}%</b></div>' for model, score in scenario.model_scores.items())
     st.markdown(f'<div class="result-card {"success" if correct else "danger"}"><div class="result-seal">{"✓" if correct else "!"}</div><div class="eyebrow">SCENARIO RECOMMENDATION</div><h3>권장 방식 · Federated</h3><p>당신의 선택은 <b>{st.session_state.model_choice}</b>입니다. 원본 반출 없이 세 은행의 패턴을 함께 활용하려면 Federated가 가장 적합합니다.</p><div class="score-row">{chips}</div></div>', unsafe_allow_html=True)
     with st.expander("Federated가 왜 유리한가요?"):
         st.write("한 은행에서는 드문 공격이 다른 은행에서는 관측될 수 있습니다. 연합학습은 원본 거래를 중앙에 모으지 않으면서 이런 패턴을 공동으로 학습합니다. Centralized는 성능 상한을 보여주지만 원본 집중에 따른 개인정보 위험이 큽니다.")
