@@ -2,6 +2,8 @@
 
 Privacy-preserving federated fraud detection system for virtual banks.
 
+Interactive GitHub Pages demo: https://sonotri.github.io/Sentinel_HTS/
+
 This MVP implements:
 
 - Synthetic transaction simulation with bank-specific non-IID distributions
