@@ -25,13 +25,12 @@ class TransactionScenario:
     agent_action: str
     fraud_score: int
     reasons: tuple[str, ...]
-    model_scores: dict[str, int]
 
 
 SCENARIOS = (
-    TransactionScenario("TX-2026-0917", "02:14", "2,840,000원", "서울 → 베를린", "0.87 / HIGH", "처음 보는 Android", "10분 이내 7회", "CRYPTO EXCHANGE", "차단", 92, ("심야 해외 거래", "고위험 IP", "신규 기기", "짧은 시간 내 반복 결제"), {"Local-only": 61, "Federated": 92, "Centralized": 94}),
-    TransactionScenario("TX-2026-2048", "19:42", "186,000원", "서울 → 파리", "0.48 / MEDIUM", "처음 보는 iPhone", "30분 이내 2회", "TRAVEL BOOKING", "추가 인증", 58, ("새로운 해외 위치", "신규 기기", "평소보다 큰 결제 금액"), {"Local-only": 37, "Federated": 58, "Centralized": 62}),
-    TransactionScenario("TX-2026-3310", "13:05", "42,500원", "서울 → 서울", "0.08 / LOW", "등록된 iPhone", "2시간 이내 1회", "GROCERY", "승인", 7, ("평소 이용 지역", "등록 기기", "일상적인 금액과 업종"), {"Local-only": 11, "Federated": 7, "Centralized": 6}),
+    TransactionScenario("TX-2026-0917", "02:14", "2,840,000원", "서울 → 베를린", "0.87 / HIGH", "처음 보는 Android", "10분 이내 7회", "CRYPTO EXCHANGE", "차단", 92, ("심야 해외 거래", "고위험 IP", "신규 기기", "짧은 시간 내 반복 결제")),
+    TransactionScenario("TX-2026-2048", "19:42", "186,000원", "서울 → 파리", "0.48 / MEDIUM", "처음 보는 iPhone", "30분 이내 2회", "TRAVEL BOOKING", "추가 인증", 58, ("새로운 해외 위치", "신규 기기", "평소보다 큰 결제 금액")),
+    TransactionScenario("TX-2026-3310", "13:05", "42,500원", "서울 → 서울", "0.08 / LOW", "등록된 iPhone", "2시간 이내 1회", "GROCERY", "승인", 7, ("평소 이용 지역", "등록 기기", "일상적인 금액과 업종")),
 )
 
 ATTACK_EVENT = {"answer": "Update Scale", "bank": "Bank B"}
@@ -200,7 +199,6 @@ def transaction_step() -> None:
 
 
 def model_step() -> None:
-    scenario = SCENARIOS[st.session_state.scenario_index]
     section_head("02", "어떤 학습 방법이 적합할까요?", "세 은행의 협업 조건을 확인하고 가장 적합한 학습 방식을 선택하세요.")
     concept("세 가지 학습 방식", """
       <span class="model-method"><b>Local-only</b><em>한 은행 내부의 거래 데이터만으로 학습합니다.</em></span>
@@ -226,8 +224,15 @@ def model_step() -> None:
         reveal_button("model_choice")
         return
     correct = st.session_state.model_choice == "Federated"
-    chips = "".join(f'<div class="score-chip risk-score {"best" if model == "Federated" else ""}"><span><strong>{model}</strong><em>— 사기 위험도</em></span><b>{score}%</b></div>' for model, score in scenario.model_scores.items())
-    st.markdown(f'<div class="result-card {"success" if correct else "danger"}"><div class="result-seal">{"✓" if correct else "!"}</div><div class="eyebrow">SCENARIO RECOMMENDATION</div><h3>권장 방식 · Federated</h3><p>당신의 선택은 <b>{st.session_state.model_choice}</b>입니다. 원본 반출 없이 세 은행의 패턴을 함께 활용하려면 Federated가 가장 적합합니다.</p><div class="score-row">{chips}</div></div>', unsafe_allow_html=True)
+    comparison = "".join(
+        f'<div class="model-fit-row {"best" if model == "Federated" else ""}"><span><b>{model}</b><em>— {reason}</em></span><small>{verdict}</small></div>'
+        for model, reason, verdict in (
+            ("Local-only", "공동 패턴 활용 불가", "조건 불충족"),
+            ("Federated", "원본 반출 없이 공동 학습", "권장"),
+            ("Centralized", "원본 데이터 집중 위험", "조건 불충족"),
+        )
+    )
+    st.markdown(f'<div class="result-card {"success" if correct else "danger"}"><div class="result-seal">{"✓" if correct else "!"}</div><div class="eyebrow">SCENARIO RECOMMENDATION</div><h3>권장 방식 · Federated</h3><p>당신의 선택은 <b>{st.session_state.model_choice}</b>입니다. 원본 반출 없이 세 은행의 패턴을 함께 활용하려면 Federated가 가장 적합합니다.</p><div class="model-fit-list">{comparison}</div></div>', unsafe_allow_html=True)
     with st.expander("Federated가 왜 유리한가요?"):
         st.write("한 은행에서는 드문 공격이 다른 은행에서는 관측될 수 있습니다. 연합학습은 원본 거래를 중앙에 모으지 않으면서 이런 패턴을 공동으로 학습합니다. Centralized는 성능 상한을 보여주지만 원본 집중에 따른 개인정보 위험이 큽니다.")
     next_button()

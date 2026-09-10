@@ -1,9 +1,9 @@
 "use strict";
 
 const scenarios = [
-  { id: "TX-2026-0917", time: "02:14", amount: "2,840,000원", location: "서울 → 베를린", ip: "0.87 / HIGH", device: "처음 보는 Android", velocity: "10분 이내 7회", merchant: "CRYPTO EXCHANGE", action: "차단", score: 92, reasons: ["심야 해외 거래", "고위험 IP", "신규 기기", "짧은 시간 내 반복 결제"], models: {"Local-only": 61, Federated: 92, Centralized: 94} },
-  { id: "TX-2026-2048", time: "19:42", amount: "186,000원", location: "서울 → 파리", ip: "0.48 / MEDIUM", device: "처음 보는 iPhone", velocity: "30분 이내 2회", merchant: "TRAVEL BOOKING", action: "추가 인증", score: 58, reasons: ["새로운 해외 위치", "신규 기기", "평소보다 큰 결제 금액"], models: {"Local-only": 37, Federated: 58, Centralized: 62} },
-  { id: "TX-2026-3310", time: "13:05", amount: "42,500원", location: "서울 → 서울", ip: "0.08 / LOW", device: "등록된 iPhone", velocity: "2시간 이내 1회", merchant: "GROCERY", action: "승인", score: 7, reasons: ["평소 이용 지역", "등록 기기", "일상적인 금액과 업종"], models: {"Local-only": 11, Federated: 7, Centralized: 6} }
+  { id: "TX-2026-0917", time: "02:14", amount: "2,840,000원", location: "서울 → 베를린", ip: "0.87 / HIGH", device: "처음 보는 Android", velocity: "10분 이내 7회", merchant: "CRYPTO EXCHANGE", action: "차단", score: 92, reasons: ["심야 해외 거래", "고위험 IP", "신규 기기", "짧은 시간 내 반복 결제"] },
+  { id: "TX-2026-2048", time: "19:42", amount: "186,000원", location: "서울 → 파리", ip: "0.48 / MEDIUM", device: "처음 보는 iPhone", velocity: "30분 이내 2회", merchant: "TRAVEL BOOKING", action: "추가 인증", score: 58, reasons: ["새로운 해외 위치", "신규 기기", "평소보다 큰 결제 금액"] },
+  { id: "TX-2026-3310", time: "13:05", amount: "42,500원", location: "서울 → 서울", ip: "0.08 / LOW", device: "등록된 iPhone", velocity: "2시간 이내 1회", merchant: "GROCERY", action: "승인", score: 7, reasons: ["평소 이용 지역", "등록 기기", "일상적인 금액과 업종"] }
 ];
 
 const privacyLevels = {
@@ -70,14 +70,17 @@ function transactionScreen() {
 }
 
 function modelScreen() {
-  const s = scenarios[state.scenario];
   let body = `${head("02", "어떤 학습 방법이 적합할까요?", "세 은행의 협업 조건을 확인하고 가장 적합한 학습 방식을 선택하세요.")}${concept("세 가지 학습 방식", '<span class="model-method"><b>Local-only</b><em>한 은행 내부의 거래 데이터만으로 학습합니다.</em></span><span class="model-method"><b>Federated</b><em>원본 거래 데이터는 각 은행에 보관하고, 각 은행의 학습 결과만 안전하게 취합해 공동 모델을 개선합니다.</em></span><span class="model-method"><b>Centralized</b><em>모든 은행의 원본 데이터를 한곳에 모아 하나의 모델을 학습합니다.</em></span>')}
   <div class="model-scenario"><p>세 은행이 공동 FDS를 구축하려 합니다</p><p>은행마다 서로 다른 사기 패턴을 보유하고 있지만 고객의 원본 거래 데이터는 외부로 반출할 수 없습니다.</p><div><span>원본 데이터 반출 금지</span><span>세 은행의 패턴 공동 활용</span><span>개인정보 노출 최소화</span></div></div>
   <div class="bank-network"><div class="bank-row">${["A", "B", "C"].map(bank => `<div class="bank-node"><div class="bank-building"><i>${bank}</i><span></span></div><b>BANK ${bank}</b><small>원본 거래 보관</small></div>`).join("")}</div><div class="network-search"><span></span><b>SEARCHING FOR THE RIGHT CONNECTION</b><span></span></div></div>`;
   if (!state.revealed) return body + choiceList("model", ["Local-only", "Federated", "Centralized"], "탐지 모델") + submit("model");
   const correct = state.model === "Federated";
-  const scores = Object.entries(s.models).map(([model, score]) => `<div class="score-chip risk-score ${model === "Federated" ? "best" : ""}"><span><strong>${model}</strong><em>— 사기 위험도</em></span><b>${score}%</b></div>`).join("");
-  body += `<div class="result-card ${correct ? "success" : "danger"}"><div class="result-seal">${correct ? "✓" : "!"}</div><div class="eyebrow">SCENARIO RECOMMENDATION</div><h3>권장 방식 · Federated</h3><p>당신의 선택은 <b>${state.model}</b>입니다. 원본 반출 없이 세 은행의 패턴을 함께 활용하려면 Federated가 가장 적합합니다.</p><div class="score-row">${scores}</div></div>`;
+  const comparison = [
+    ["Local-only", "공동 패턴 활용 불가", "조건 불충족"],
+    ["Federated", "원본 반출 없이 공동 학습", "권장"],
+    ["Centralized", "원본 데이터 집중 위험", "조건 불충족"]
+  ].map(([model, reason, verdict]) => `<div class="model-fit-row ${model === "Federated" ? "best" : ""}"><span><b>${model}</b><em>— ${reason}</em></span><small>${verdict}</small></div>`).join("");
+  body += `<div class="result-card ${correct ? "success" : "danger"}"><div class="result-seal">${correct ? "✓" : "!"}</div><div class="eyebrow">SCENARIO RECOMMENDATION</div><h3>권장 방식 · Federated</h3><p>당신의 선택은 <b>${state.model}</b>입니다. 원본 반출 없이 세 은행의 패턴을 함께 활용하려면 Federated가 가장 적합합니다.</p><div class="model-fit-list">${comparison}</div></div>`;
   return body + expand("Federated가 왜 유리한가요?", "한 은행에서는 드문 공격이 다른 은행에서는 관측될 수 있습니다. 연합학습은 원본 거래를 중앙에 모으지 않으면서 이런 패턴을 공동으로 학습합니다.") + next();
 }
 

@@ -286,11 +286,14 @@ div[data-testid="stExpander"] details div p, div[data-testid="stExpander"] detai
 .reason-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 15px; }.reason-list span { color: #d1c7b1; border: 1px solid rgba(212,178,103,.18); padding: 5px 9px; font-size: 9px; background: rgba(0,0,0,.12); }.reason-list span::before { content: "✦"; color: var(--gold); margin-right: 5px; }
 .agent-action { display: flex; flex-direction: column; margin-top: 15px; padding: 12px 14px; border-left: 2px solid var(--gold); background: rgba(0,0,0,.15); }.agent-action small { color: var(--gold); font: 700 7px Arial,sans-serif; letter-spacing: .2em; }.agent-action b { color: #d7cebb; font-size: 10px; margin-top: 4px; }
 .score-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 9px; margin-top: 18px; }.score-chip { padding: 15px 12px; display: flex; flex-direction: column; border: 1px solid rgba(212,178,103,.18); background: rgba(0,0,0,.14); }.score-chip.best { border-color: rgba(212,178,103,.58); background: rgba(212,178,103,.09); }.score-chip span { color: #9d9e95; font-size: 9px; }.score-chip b { color: var(--paper); font: 700 24px "Cormorant Garamond",serif; }.score-chip small { color: #63887d; font: 700 6px Arial,sans-serif; letter-spacing: .15em; }
-.score-chip.risk-score { min-height: 72px; flex-direction: row; align-items: center; justify-content: space-between; gap: 10px; }
-.score-chip.risk-score span { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0; }
-.score-chip.risk-score span strong { color: var(--paper); font: 700 13px "Cormorant Garamond",serif; white-space: nowrap; }
-.score-chip.risk-score span em { color: #8da69c; font: 600 9px "Noto Serif KR",serif; font-style: normal; white-space: nowrap; }
-.score-chip.risk-score > b { flex: none; font-size: 27px; white-space: nowrap; }
+.model-fit-list { display: grid; gap: 8px; margin-top: 18px; }
+.model-fit-row { min-height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 14px; border: 1px solid rgba(212,178,103,.18); background: rgba(0,0,0,.14); }
+.model-fit-row.best { border-color: rgba(212,178,103,.58); background: rgba(212,178,103,.09); box-shadow: inset 3px 0 0 var(--gold); }
+.model-fit-row > span { display: flex; align-items: baseline; flex-wrap: wrap; gap: 5px; min-width: 0; }
+.model-fit-row > span b { color: var(--paper); font: 700 15px "Cormorant Garamond",serif; white-space: nowrap; }
+.model-fit-row > span em { color: #aeb8b1; font: 600 11px "Noto Serif KR",serif; font-style: normal; }
+.model-fit-row > small { flex: none; padding: 4px 7px; color: #82978f; border: 1px solid rgba(130,151,143,.25); font: 700 8px Arial,sans-serif; letter-spacing: .08em; }
+.model-fit-row.best > small { color: var(--gold-pale); border-color: rgba(212,178,103,.48); background: rgba(212,178,103,.08); }
 
 /* Mission-specific diagrams */
 .model-scenario { margin: 0 0 16px; padding: 22px 25px; border-left: 3px solid var(--gold); background: linear-gradient(100deg, rgba(107,32,42,.32), rgba(8,31,26,.82) 62%); }
