@@ -1,10 +1,6 @@
-<div align="center">
-  <img src="./img/img01.jpg" width="52.37%" align="left" alt="Sentinel Bank 화면 1" />
-  <img src="./img/img02.png" width="45.63%" alt="Sentinel Bank 화면 2" /><br />
-  <img src="./img/img03.png" width="45.63%" alt="Sentinel Bank 화면 3" />
-</div>
-
-<br clear="all" />
+<p align="center">
+  <img src="./img/img01.png"  alt="Sentinel Bank 화면" />
+</p>
 
 <br>
 <p align="center">
@@ -60,7 +56,7 @@
     </td>
     <td align="center" width="240">
       <img src="https://github.com/identicons/yeonji.png" width="96" alt="연지" /><br />
-      <strong>hayj9022</strong><br />
+      <a href="https://github.com/hayj9022"><strong>hayj9022</strong></a><br />
       <sub>Development · Operations</sub>
     </td>
   </tr>
