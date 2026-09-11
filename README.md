@@ -1,7 +1,14 @@
-# Sentinel Bank
+<div align="center">
+  <img src="./img/img01.jpg" width="52.37%" align="left" alt="Sentinel Bank 화면 1" />
+  <img src="./img/img02.png" width="45.63%" alt="Sentinel Bank 화면 2" /><br />
+  <img src="./img/img03.png" width="45.63%" alt="Sentinel Bank 화면 3" />
+</div>
 
+<br clear="all" />
+
+<br>
 <p align="center">
-  <a href="https://sonotri.github.io/Sentinel_HTS/"><strong>보안 체험 시작하기</strong></a>
+  <a href="https://sonotri.github.io/Sentinel_HTS/"><strong>Sentinel Bank 시작하기</strong></a>
 </p>
 
 <br />
@@ -47,14 +54,14 @@
     <td align="center" width="240">
       <a href="https://github.com/sonotri">
         <img src="https://github.com/sonotri.png" width="96" alt="안현진" /><br />
-        <strong>안현진 · sonotri</strong>
+        <strong>sonotri</strong>
       </a><br />
-      <sub>Planning · Development · Design · Security Scenario</sub>
+      <sub>Planning · Development · Design · Operations</sub>
     </td>
     <td align="center" width="240">
       <img src="https://github.com/identicons/yeonji.png" width="96" alt="연지" /><br />
-      <strong>연지</strong><br />
-      <sub>Planning · Development · Design · Security Scenario</sub>
+      <strong>hayj9022</strong><br />
+      <sub>Development · Operations</sub>
     </td>
   </tr>
 </table>
