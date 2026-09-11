@@ -2,14 +2,13 @@
   <img src="./img/img01.png"  alt="Sentinel Bank 화면" />
 </p>
 
-<br>
 <p align="center">
   <a href="https://sonotri.github.io/Sentinel_HTS/"><strong>Sentinel Bank 시작하기</strong></a>
 </p>
 
 <br />
 
-## 프로젝트 소개
+## 🏦 프로젝트 소개
 
 **Sentinel Bank**는 금융 이상거래 탐지와 개인정보보호형 연합학습 개념을 쉽고 재미있게 전달하기 위해 제작한 웹 기반 보안 체험 콘텐츠입니다.
 
@@ -17,7 +16,7 @@
 
 <br />
 
-## 플레이 방식
+## 🎮 플레이 방식
 
 - Sentinel 카드를 발급받고 보안국에 입장합니다.
 - 거래 시간·위치·기기·IP 등 위험 신호를 분석해 승인 여부를 결정합니다.
@@ -28,7 +27,7 @@
 
 <br />
 
-## 주요 보안 시나리오
+## 📜 보안 시나리오
 
 각 임무는 실제 금융 보안 위협과 개인정보보호 개념을 바탕으로 직접 기획·개발했습니다.
 
